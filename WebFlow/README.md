@@ -1,12 +1,12 @@
-# Custom Markup Language (CML)
+# WebFlow
 
 A structured, block-based syntax for defining HTML documents.
 
 ---
 
-## What Is CML
+## What Is WebFlow
 
-**CML (Custom Markup Language)** is an indentation-based, block-structured language that compiles into HTML.
+**WebFlow** is a block-structured language that compiles into HTML.
 
 * `tag:` opens an element
 * `;` closes an element
@@ -56,7 +56,7 @@ Child elements are written between a tag and its closing semicolon.
 
 ## Example
 
-### CML Input
+### WebFlow Input
 
 ```text
 html:
@@ -120,3 +120,4 @@ html:
 * Join `classes{}` with spaces
 * Auto-append `;` in `styles{}`
 * Validate attributes in `props{}` against HTML spec
+
