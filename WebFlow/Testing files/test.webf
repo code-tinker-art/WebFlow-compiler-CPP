@@ -1,0 +1,53 @@
+html:
+	head:;
+	body:
+		div: dataset{id: hfsUFjhfuhfuxe2b346}
+			classes{t,e,s,t}
+			ids{t,e,s,t}
+			props{contenteditable:true}
+			styles{padding:12px}
+			content{hi}
+		;
+	;
+;
+
+
+
+
+
+
+
+
+
+
+--Instructions
+--also in README.md
+
+--tags can be declared like html:;
+--childrens go inside tags like this
+--html:
+--   head:;
+--   body:;
+--;
+--{} is a block, it start with its name and a pair of curly braces
+--eg: nameOfTheBlock{}
+
+--types of blocks
+
+--content{} used to insert content 
+--eg: div: content{hi}; -> <div>hi</div>
+
+--props{} used to declare attributes (named it props bcuz they are like properties of a element :) }
+--eg: button: props{type:reset}; -> <button type="reset"></button>
+
+--classes{} and ids{} used to declare classes and ids
+--eg: div: classes{t e s t} ids{t e s t}; -> <div class="t e s t" id="t e s t"></div>
+
+--styles{} used to declare styles
+--eg: div: styles{padding:12px}; -> <div style="padding:12px;"></div>
+
+--dataset{} used to declare dataset
+--eg: button: dataset{id:1234jfu}; -> <button data-id="1234jfu"></button>
+
+
+
