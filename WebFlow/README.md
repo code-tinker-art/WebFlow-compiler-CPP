@@ -113,10 +113,9 @@ html:
 ---
 
 ## Recommended Constraints
-
-* Allow only **one value** in `ids{}`
-* Join `classes{}` with spaces
+* Join `classes{}` `ids{}` with spaces
 * Auto-append `;` in `styles{}`
 * Validate attributes in `props{}` against HTML spec
+
 
 
