@@ -43,14 +43,12 @@ Child elements are written between a tag and its closing semicolon.
 
 | Block       | Purpose                  | Example                    | HTML Equivalent                 |
 | ----------- | ------------------------ | -------------------------- | ------------------------------- |
-| `content{}` | Inner text / HTML        | `p: content{hello};`       | `<p>hello</p>`                  |
+| `content{}` | Inner text       | `p: content{hello};`       | `<p>hello</p>`                  |
 | `props{}`   | Standard HTML attributes | `input: props{type:text};` | `<input type="text">`           |
 | `classes{}` | CSS class list           | `div: classes{container};` | `<div class="container"></div>` |
 | `ids{}`     | Element identifier       | `div: ids{main};`          | `<div id="main"></div>`         |
 | `styles{}`  | Inline CSS               | `div: styles{top:0};`      | `<div style="top:0;"></div>`    |
 | `dataset{}` | `data-*` attributes      | `div: dataset{id:1};`      | `<div data-id="1"></div>`       |
-
-> **Note:** HTML supports only **one `id` per element**.
 
 ---
 
@@ -120,4 +118,5 @@ html:
 * Join `classes{}` with spaces
 * Auto-append `;` in `styles{}`
 * Validate attributes in `props{}` against HTML spec
+
 
