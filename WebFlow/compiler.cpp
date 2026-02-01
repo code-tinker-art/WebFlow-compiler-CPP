@@ -1,3 +1,7 @@
+/*
+    @author Magizhnun
+    @version 1.0.0
+*/
 #include <algorithm>
 #include <sstream>
 #include "compiler.h"
@@ -352,3 +356,4 @@ str convertToHTML(const str& src) {
     }
     return out.str();
 }
+
