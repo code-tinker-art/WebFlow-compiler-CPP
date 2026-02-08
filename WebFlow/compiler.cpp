@@ -1,10 +1,7 @@
-/*
-    @author Magizhnun
-    @version 1.0.0
-*/
 #include <algorithm>
 #include <sstream>
 #include "compiler.h"
+#include "Error.h"
 
 size_t charIndex = 0;
 size_t tokenIndex = 0;
@@ -30,18 +27,17 @@ bool contain(const vector<TokenType>& arr, TokenType value) {
 }
 
 bool isInt(char c) {
-    return c >= '0' && c <= '9';
+    return c >= '0' and c <= '9';
 }
 
 bool isSkippable(char c) {
-    return c == ' ' || c == '\n' || c == '\r' || c == '\t';
+    return c == ' ' or c == '\n' or c == '\r' or c == '\t';
 }
 
 /* tokenizer */
 vector<Token> tokenize(str& sourceCode) {
     if (sourceCode.empty()) {
-        cerr << "Empty source";
-        abort();
+        EmptySource e("Empty source given for parsing...");
     }
 
     vector<char> src(sourceCode.begin(), sourceCode.end());
@@ -63,7 +59,7 @@ vector<Token> tokenize(str& sourceCode) {
 
             while (charIndex < src.size()) {
                 if (src[charIndex] == '\\') {
-                    if (charIndex + 1 < src.size() && src[charIndex + 1] == '{') {
+                    if (charIndex + 1 < src.size() and src[charIndex + 1] == '{') {
                         value += '{'; charIndex += 2;
                     }
                     else if (src[charIndex + 1] == '}') {
@@ -84,9 +80,13 @@ vector<Token> tokenize(str& sourceCode) {
                 else value += shift(src);
             }
 
-            if (src[charIndex] != '}') {
-                cerr << "Unclosed block";
-                abort();
+            if (charIndex < src.size() ){
+                if (src[charIndex] != '}') {
+                    UnclosedError e("Unclosed block found during parsing...");
+                }
+            }
+            else {
+                UnclosedError e("Unclosed block found during parsing...");
             }
 
             shift(src);
@@ -95,21 +95,14 @@ vector<Token> tokenize(str& sourceCode) {
         else if (src[charIndex] == '-') {
             if (src[charIndex + 1] == '-') {
                 ++charIndex;
-                while (charIndex < src.size() && src[charIndex] != '\n') {
+                while (charIndex < src.size() and src[charIndex] != '\n') {
                     charIndex++;
                 }
             }
         }
-        else if (
-            (src[charIndex] >= 'A' && src[charIndex] <= 'Z') ||
-            (src[charIndex] >= 'a' && src[charIndex] <= 'z') ||
-            isInt(src[charIndex])
-            ) {
+        else if ((src[charIndex] >= 'A' and src[charIndex] <= 'Z') or (src[charIndex] >= 'a' and src[charIndex] <= 'z') or isInt(src[charIndex])) {
             str expr;
-            while (charIndex < src.size() &&
-                ((src[charIndex] >= 'A' && src[charIndex] <= 'Z') ||
-                    (src[charIndex] >= 'a' && src[charIndex] <= 'z') ||
-                    isInt(src[charIndex]))) {
+            while (charIndex < src.size() and ((src[charIndex] >= 'A' and src[charIndex] <= 'Z') or (src[charIndex] >= 'a' and src[charIndex] <= 'z') or isInt(src[charIndex]))) {
                 expr += shift(src);
             }
 
@@ -125,8 +118,8 @@ vector<Token> tokenize(str& sourceCode) {
             ++charIndex;
         }
         else {
-            cerr << "Unexpected char \"" << src[charIndex] << "\"";
-            abort();
+            str err = (str) "Unexpected char \"" + src[charIndex] + "\"";
+            UnexpectedError e(err);
         }
     }
 
@@ -145,9 +138,9 @@ Token Parser::current() { return src[tokenIndex]; }
 
 Token Parser::eat(TokenType type) {
     Token t = shift(src);
-    if (type >= 0 && t.type != type) {
-        cerr << "Unexpected token " << t.value << " of type " << t.type;
-        abort();
+    if (type >= 0 and t.type != type) {
+        str err = "Unexpected token " + t.value + " of type " + std::to_string(t.type);
+        UnexpectedError e(err);
     }
     return t;
 }
@@ -176,8 +169,7 @@ Element Parser::parseElement() {
         vector<TokenType> blocks = { Props, Content, Dataset, Classes, Ids, Style };
         if (contain(blocks, t.type)) parseSet(&elem);
         else {
-            cerr << "Unexpected token";
-            abort();
+            UnexpectedError e("Unexpected token");
         }
     }
 
@@ -186,8 +178,8 @@ Element Parser::parseElement() {
 
 str Parser::trim(const str& s) {
     size_t start = 0, end = s.size();
-    while (start < end && std::isspace(static_cast<unsigned char>(s[start]))) ++start;
-    while (end > start && std::isspace(static_cast<unsigned char>(s[start]))) --end;
+    while (start < end and std::isspace(static_cast<unsigned char>(s[start]))) ++start;
+    while (end > start and std::isspace(static_cast<unsigned char>(s[start]))) --end;
     return s.substr(start, end - start);
 }
 
@@ -198,16 +190,16 @@ vector<KeyVal> Parser::parseKeyValue(str value) {
 
     for (size_t i = 0; i <= value.size(); ++i) {
         char c = i < value.size() ? value[i] : '\0';
-        if (c == '\0' || (c == ',' && !quotes)) {
+        if (c == '\0' or (c == ',' and not quotes)) {
             str t = trim(curr);
-            if (!t.empty()) {
+            if (not t.empty()) {
                 size_t pos = t.find(':');
                 if (pos != str::npos)
                     arr.emplace_back(trim(t.substr(0, pos)), trim(t.substr(pos + 1)) );
             }
             curr.clear();
         }
-        else if (c == '"') { quotes = !quotes; curr += c; }
+        else if (c == '"') { quotes = not quotes; curr += c; }
         else curr += c;
     }
 
@@ -221,11 +213,11 @@ vector<str> Parser::parseList(str value) {
 
     for (size_t i = 0; i <= value.size(); ++i) {
         char c = i < value.size() ? value[i] : '\0';
-        if (c == '\0' || (c == ',' && !quotes)) {
-            if (!trim(curr).empty()) arr.emplace_back(unquote(trim(curr)));
+        if (c == '\0' or (c == ',' and not quotes)) {
+            if (not trim(curr).empty()) arr.emplace_back(unquote(trim(curr)));
             curr.clear();
         }
-        else if (c == '"') { quotes = !quotes; curr += c; }
+        else if (c == '"') { quotes = not quotes; curr += c; }
         else curr += c;
     }
 
@@ -233,7 +225,7 @@ vector<str> Parser::parseList(str value) {
 }
 
 str Parser::unquote(str s) {
-    return s.size() >= 2 && s[0] == '"' && s.back() == '"'
+    return s.size() >= 2 and s[0] == '"' and s.back() == '"'
         ? s.substr(1, s.size() - 2)
         : s;
 }
@@ -241,7 +233,7 @@ str Parser::unquote(str s) {
 str Parser::parseContent(str value) {
     str res;
     for (size_t i = 0; i < value.size(); ++i) {
-        if (value[i] == '\\' && i + 1 < value.size() && value[i + 1] == ',') {
+        if (value[i] == '\\' and i + 1 < value.size() and value[i + 1] == ',') {
             res += ','; i++;
         }
         else res += value[i];
@@ -258,7 +250,7 @@ void Parser::parseSet(Element* elem) {
     case Ids: eat(); elem->ids = parseList(eat(Block).value); break;
     case Content: eat(); elem->content = parseContent(eat(Block).value); break;
     case Style: eat(); elem->style = parseKeyValue(eat(Block).value); break;
-    default: cerr << "Invalid set"; abort();
+    default: InvalidError e("Invalid set");
     }
 }
 
@@ -332,13 +324,13 @@ str convertElementToHTML(const Element& e, size_t depth) {
     std::ostringstream out;
     out << indent << "<" << e.tagName << attr(e) << ">\n";
 
-    if (!e.content.empty())
+    if (not e.content.empty())
         out << indent << "\t" << e.content << "\n";
 
     for (const auto& child : e.children)
         out << convertElementToHTML(child, depth + 1);
 
-    if (!e.closed || !e.children.empty() || !e.content.empty())
+    if (not e.closed or not e.children.empty() or not e.content.empty())
         out << indent << "</" << e.tagName << ">\n";
 
     return out.str();
@@ -356,4 +348,3 @@ str convertToHTML(const str& src) {
     }
     return out.str();
 }
-

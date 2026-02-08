@@ -1,4 +1,4 @@
-﻿  compiler.cpp
-  main.cpp
+﻿  Error.cpp
+  compiler.cpp
   Generating Code...
   WebFlow.vcxproj -> C:\EcoSys\Sample\HTML\Magizhnun\Projects\Custom projects\Custom language\Github - CPP\WebFlow\x64\Debug\WebFlow.exe
