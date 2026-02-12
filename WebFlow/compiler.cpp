@@ -330,7 +330,7 @@ str convertElementToHTML(const Element& e, size_t depth) {
     for (const auto& child : e.children)
         out << convertElementToHTML(child, depth + 1);
 
-    if (not e.closed or not e.children.empty() or not e.content.empty())
+    if (e.closed or not e.children.empty() or not e.content.empty())
         out << indent << "</" << e.tagName << ">\n";
 
     return out.str();
@@ -348,3 +348,4 @@ str convertToHTML(const str& src) {
     }
     return out.str();
 }
+
