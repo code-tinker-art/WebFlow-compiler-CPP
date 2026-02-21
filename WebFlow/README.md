@@ -1,10 +1,10 @@
-# Custom Markup Language (CML)
+# Webflow 
 
 A structured, block-based syntax for defining HTML documents.
 
 ---
 
-## What Is CML
+## What Is Webflow 
 
 **CML (Custom Markup Language)** is an indentation-based, block-structured language that compiles into HTML.
 
@@ -56,7 +56,7 @@ Child elements are written between a tag and its closing semicolon.
 
 ## Example
 
-### CML Input
+### Webflow Input
 
 ```text
 html:
@@ -120,3 +120,4 @@ html:
 * Join `classes{}` with spaces
 * Auto-append `;` in `styles{}`
 * Validate attributes in `props{}` against HTML spec
+
